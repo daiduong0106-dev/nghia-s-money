@@ -44,7 +44,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .side{display:none}
 .topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding:12px 0 8px;display:flex;align-items:center;justify-content:space-between;gap:8px 10px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px}
-.mark{width:30px;height:30px;border-radius:9px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:15px}
+.mark img{width:100%;height:100%;display:block;border-radius:inherit}
+.mark{overflow:hidden;width:30px;height:30px;border-radius:9px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:15px}
 .tools{display:flex;align-items:center;gap:6px}
 .seg{display:inline-flex;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:2px}
 .seg button{border:0;background:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;color:var(--muted)}
@@ -192,13 +193,13 @@ body{margin:0}
 </style></head><body>
 <div class="shell">
   <aside class="side">
-    <div class="brand"><span class="mark">$</span>Money</div>
+    <div class="brand"><span class="mark"><img src="icon-192.png" alt=""></span>Money</div>
     <nav id="nav-side" aria-label="Điều hướng"></nav>
     <div class="tools" id="cur-side"></div>
     <button class="btn primary" data-act="add">+ Thêm khoản</button>
   </aside>
   <div>
-    <header class="topbar"><div class="brand"><span class="mark">$</span>Money</div><div class="tools" id="cur-top"></div></header>
+    <header class="topbar"><div class="brand"><span class="mark"><img src="icon-192.png" alt=""></span>Money</div><div class="tools" id="cur-top"></div></header>
     <main id="view" aria-live="polite"></main>
   </div>
 </div>
@@ -264,7 +265,7 @@ body{margin:0}
 </div>
 <div class="login" id="login" hidden>
   <div class="box">
-    <span class="mark" style="display:inline-grid;width:38px;height:38px;border-radius:11px;background:var(--accent);color:var(--on-accent);place-items:center;font-family:var(--mono);font-weight:600;font-size:19px">$</span>
+    <span class="mark" style="display:inline-grid;width:44px;height:44px;border-radius:12px;overflow:hidden"><img src="icon-192.png" alt=""></span>
     <h1>Money</h1>
     <p>Chỉ 2 tài khoản được cấp mới vào được.</p>
     <label for="lg-email">Email</label>
