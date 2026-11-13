@@ -130,6 +130,7 @@ h2.ct{font-size:15px;margin:0 0 12px;font-weight:600}
 .chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .search{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit;margin-bottom:10px}
+body.ro .fab{display:none}
 .nudge{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--surface);border:1px solid var(--c-need);border-radius:14px;padding:12px 14px;margin-bottom:14px}
 .nudge p{margin:0;font-weight:500;flex:1 1 200px}
 .nudge .acts{display:flex;gap:8px;flex-wrap:wrap}
@@ -256,6 +257,7 @@ body{margin:0}
       <button class="btn primary" id="rm-on" data-act="rmon">Bật thông báo</button>
       <button class="btn" id="rm-off" data-act="rmoff" hidden>Tắt nhắc</button>
       <button class="btn" data-act="rmics">Hoặc tải lịch nhắc cho iPhone (.ics)</button>
+      <button class="btn" id="rm-switch" data-act="switch" hidden>Xem sổ của em (chỉ xem)</button>
       <button class="btn danger" data-act="logout">Đăng xuất <span class="hint" id="rm-who"></span></button>
     </div>
   </div>

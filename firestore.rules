@@ -1,13 +1,20 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // CHỈ 2 EMAIL NÀY được đọc/ghi. Đổi thành email thật của 2 người.
+    // CHỈ 2 EMAIL NÀY được vào. Đổi thành email thật của 2 người.
     function allowed() {
       return request.auth != null
-        && request.auth.token.email in ['EMAIL_CUA_BAN@gmail.com', 'EMAIL_NGUOI_THU_2@gmail.com'];
+        && request.auth.token.email in ['daiduong0106@gmail.com', 'EMAIL_NGUOI_THU_2@gmail.com'];
     }
-    match /ledger/{doc}      { allow read, write: if allowed(); }
-    match /reminders/{uid}   { allow read, write: if allowed() && request.auth.uid == uid; }
-    match /{document=**}     { allow read, write: if false; }
+    // Chủ sổ (anh). Phải trùng OWNER_EMAIL trong firebase-config.js.
+    function owner() {
+      return request.auth != null && request.auth.token.email == 'daiduong0106@gmail.com';
+    }
+    // Sổ của em: cả 2 xem được, chỉ em ghi được.
+    match /ledger/{doc}       { allow read: if allowed(); allow write: if allowed() && !owner(); }
+    // Sổ riêng của anh: chỉ anh đọc/ghi.
+    match /ledger_owner/{doc} { allow read, write: if owner(); }
+    match /reminders/{uid}    { allow read, write: if allowed() && request.auth.uid == uid; }
+    match /{document=**}      { allow read, write: if false; }
   }
 }

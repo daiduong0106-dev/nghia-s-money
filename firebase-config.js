@@ -10,3 +10,5 @@ window.FIREBASE_CONFIG = {
 };
 /* Khóa công khai cho thông báo đẩy (khóa riêng nằm trong file nghia-money-secrets.txt, chỉ dán vào GitHub Secrets). */
 window.VAPID_PUBLIC_KEY = "BArxgiZMwc_LIsNHjV7oXCEV6282_2Rq4P33M-Yz39eM_lolnxQTu_O-ja9lj0sS_v3C2lo2m-ZhCjkzoojOc-U";
+/* Email của chủ sổ: có sổ riêng (ledger_owner), và xem được sổ của tài khoản kia (chỉ xem). Để trống = như cũ, cả 2 dùng chung 1 sổ. */
+window.OWNER_EMAIL = "daiduong0106@gmail.com";

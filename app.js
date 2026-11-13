@@ -31,7 +31,7 @@ function todayStr(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()
 var state={tab:'home',ym:todayStr().slice(0,7),months:{},loaded:false,error:null,slow:false,mode:'db',
   cur:defaultCur(),filter:{cat:'all',q:''},edit:null,fx:null};
 var FXR={};
-var coll=null,unsub=null,charts=[],queues={},loadTimer=null,delTimer=null;
+var coll=null,unsub=null,charts=[],queues={},loadTimer=null,delTimer=null,ro=false,viewOther=false;
 
 /* ---------- currency ---------- */
 /* Rates come only from the exchanges the user records (sent vs received), never from the market. */
@@ -159,7 +159,7 @@ function render(){
   if(!state.loaded){v.innerHTML='<div class="skel"></div><div class="skel"></div>'+(state.slow?'<p class="notice">Chưa tải được dữ liệu. Kiểm tra mạng, sổ sẽ tự tải khi kết nối được.</p>':'');return}
   var views={home:viewHome,tx:viewTx,stats:viewStats,save:viewSave};
   var miss=allItems().filter(noRate).length;
-  v.innerHTML=(miss?'<div class="nudge"><p>'+miss+' khoản bằng tiền khác chưa có tỷ giá sang '+state.cur+', nên chưa tính vào tổng. Ghi một lần đổi tiền để có tỷ giá.</p><div class="acts"><button class="btn small primary" data-act="fx">Ghi đổi tiền</button></div></div>':'')+views[state.tab]();
+  v.innerHTML=(ro?'<div class="nudge"><p>Đang xem sổ của em (chỉ xem).</p><div class="acts"><button class="btn small primary" data-act="switch">Về sổ của anh</button></div></div>':'')+(miss?'<div class="nudge"><p>'+miss+' khoản bằng tiền khác chưa có tỷ giá sang '+state.cur+', nên chưa tính vào tổng. Ghi một lần đổi tiền để có tỷ giá.</p><div class="acts"><button class="btn small primary" data-act="fx">Ghi đổi tiền</button></div></div>':'')+views[state.tab]();
   var after={home:chartsHome,stats:chartsStats,save:chartsSave}[state.tab];
   if(after&&typeof Chart!=='undefined')after();
 }
@@ -393,6 +393,7 @@ document.addEventListener('click',function(ev){
   if(ev.target.id==='ov3'){closeRemind();return}
   var b=ev.target.closest('[data-act]');if(!b)return;
   var a=b.dataset.act;
+  if(ro&&/^(add|addsave|edit|nospend|save|del|fx|savefx|delfx)$/.test(a)){toast('Đang xem sổ của em, chỉ xem.');return}
   if(a==='tab'){setTab(b.dataset.tab)}
   else if(a==='cur'){state.cur=b.dataset.cur;persistSettings();render()}
   else if(a==='fx'){openFx(null)}
@@ -431,6 +432,7 @@ document.addEventListener('click',function(ev){
   else if(a==='rmon'){enableRemind()}
   else if(a==='rmoff'){disableRemind()}
   else if(a==='rmics'){icsFile()}
+  else if(a==='switch'){closeRemind();viewOther=!viewOther;watch()}
   else if(a==='logout'){closeRemind();if(fbAuth)fbAuth.signOut()}
   else if(a==='login'){doLogin()}
 });
@@ -465,6 +467,7 @@ function pushSupported(){return 'serviceWorker' in navigator&&'PushManager' in w
 function remindDoc(){return fbDb.collection('reminders').doc(me.uid)}
 function openRemind(){
   $('#ov3').hidden=false;$('#rm-who').textContent=me?me.email:'';
+  var sw=$('#rm-switch');sw.hidden=!isOwner();sw.textContent=viewOther?'Về sổ của anh':'Xem sổ của em (chỉ xem)';
   if(!$('#rm-time').value)$('#rm-time').value='20:00';
   drawRemind();
   if(me)remindDoc().get().then(function(d){var x=d.exists?d.data():null;state.rm=x;if(x&&x.time)$('#rm-time').value=x.time;drawRemind()}).catch(function(){});
@@ -525,11 +528,17 @@ function doLogin(){
   $('#lg-btn').disabled=true;
   fbAuth.signInWithEmailAndPassword(em,pw).then(function(){$('#lg-pass').value=''}).catch(function(e){showLogin(authErr(e))}).then(function(){$('#lg-btn').disabled=false});
 }
-function startDb(user){
-  me=user;$('#login').hidden=true;
-  coll=fbDb.collection('ledger');
+function isOwner(){return !!(me&&me.email&&window.OWNER_EMAIL&&me.email.toLowerCase()===String(window.OWNER_EMAIL).toLowerCase())}
+function startDb(user){me=user;viewOther=false;$('#login').hidden=true;watch()}
+/* Chủ sổ (OWNER_EMAIL) ghi vào 'ledger_owner'; tài khoản còn lại ghi vào 'ledger'. Chủ sổ có thể chuyển sang xem 'ledger' (chỉ xem). */
+function watch(){
+  try{unsub&&unsub()}catch(e){}
+  ro=isOwner()&&viewOther;document.body.classList.toggle('ro',ro);
+  coll=fbDb.collection(isOwner()&&!viewOther?'ledger_owner':'ledger');
+  state.months={};state.loaded=false;state.slow=false;state.error=null;
   clearTimeout(loadTimer);
   loadTimer=setTimeout(function(){if(!state.loaded){state.slow=true;render()}},10000);
+  render();
   unsub=coll.onSnapshot(function(snap){
     if(snap.empty&&snap.metadata.fromCache&&navigator.onLine)return; /* wait for server so the welcome card does not flash */
     var m={};
@@ -555,7 +564,7 @@ function boot(){
   fbAuth.onAuthStateChanged(function(u){
     if(u){startDb(u);return}
     try{unsub&&unsub()}catch(e){}
-    unsub=null;me=null;state.months={};state.loaded=false;state.error=null;clearTimeout(loadTimer);render();showLogin();
+    unsub=null;me=null;ro=false;viewOther=false;document.body.classList.remove('ro');state.months={};state.loaded=false;state.error=null;clearTimeout(loadTimer);render();showLogin();
   });
 }
 boot();
