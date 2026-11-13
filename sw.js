@@ -1,7 +1,7 @@
 const CACHE = 'nbm-v1';
 const SHELL = ['./', 'index.html', 'app.js', 'firebase-config.js', 'manifest.webmanifest',
-  'vendor/chart.umd.js', 'vendor/firebase-app-compat.js', 'vendor/firebase-auth-compat.js',
-  'vendor/firebase-firestore-compat.js', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
+  'chart.umd.js', 'firebase-app-compat.js', 'firebase-auth-compat.js',
+  'firebase-firestore-compat.js', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -27,7 +27,7 @@ self.addEventListener('push', e => {
   let d = {};
   try { d = e.data ? e.data.json() : {}; } catch (_) {}
   e.waitUntil(self.registration.showNotification(d.title || 'Nghĩa Béo Money', {
-    body: d.body || 'Hôm nay chưa ghi thu chi.', icon: 'icons/icon-192.png', badge: 'icons/icon-192.png',
+    body: d.body || 'Hôm nay chưa ghi thu chi.', icon: 'icon-192.png', badge: 'icon-192.png',
     tag: 'daily', data: { url: d.url || './' }
   }));
 });
