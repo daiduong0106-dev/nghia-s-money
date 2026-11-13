@@ -1,4 +1,4 @@
-const CACHE = 'nbm-v6';
+const CACHE = 'nbm-v7';
 const SHELL = ['./', 'index.html', 'app.js', 'firebase-config.js', 'manifest.webmanifest',
   'chart.umd.js', 'firebase-app-compat.js', 'firebase-auth-compat.js',
   'firebase-firestore-compat.js', 'logo.png', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
