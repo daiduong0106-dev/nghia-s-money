@@ -26,7 +26,7 @@ self.addEventListener('fetch', e => {
 self.addEventListener('push', e => {
   let d = {};
   try { d = e.data ? e.data.json() : {}; } catch (_) {}
-  e.waitUntil(self.registration.showNotification(d.title || 'Nghĩa Béo Money', {
+  e.waitUntil(self.registration.showNotification(d.title || 'Money', {
     body: d.body || 'Hôm nay chưa ghi thu chi.', icon: 'icon-192.png', badge: 'icon-192.png',
     tag: 'daily', data: { url: d.url || './' }
   }));

@@ -175,7 +175,7 @@ function nudge(){
   return '<div class="nudge"><p>Hôm nay bạn chưa ghi khoản nào.</p><div class="acts"><button class="btn small primary" data-act="add">Ghi khoản chi</button><button class="btn small" data-act="nospend">Hôm nay không chi</button></div></div>';
 }
 function startCard(){
-  return '<section class="card start"><h1>Chào mừng đến Nghĩa Béo Money</h1><p>Ghi lại thu nhập, chi tiêu và tiết kiệm mỗi ngày, rồi xem tổng kết theo tháng.</p>'+
+  return '<section class="card start"><h1>Chào mừng đến Money</h1><p>Ghi lại thu nhập, chi tiêu và tiết kiệm mỗi ngày, rồi xem tổng kết theo tháng.</p>'+
    '<ol><li><span>1. Chọn đơn vị tiền</span><div class="seg" role="group" aria-label="Đơn vị tiền hiển thị">'+CURS.map(function(c){return '<button data-act="cur" data-cur="'+c+'" aria-pressed="'+(state.cur===c)+'">'+c+'</button>'}).join('')+'</div></li>'+
    '<li><span>2. Ghi khoản đầu tiên</span><button class="btn primary" data-act="add">+ Thêm khoản</button></li></ol></section>';
 }
@@ -477,7 +477,7 @@ function drawRemind(){
   var s=$('#rm-status'),on=state.rm&&state.rm.sub,msg='',canPush=pushSupported()&&(!isIOS()||isStandalone());
   if(!window.VAPID_PUBLIC_KEY||/PASTE/.test(window.VAPID_PUBLIC_KEY))msg='Chưa cấu hình khóa thông báo (VAPID) trong firebase-config.js.';
   else if(!canPush)msg=isIOS()?'Để nhận thông báo: mở app bằng icon ngoài màn hình chính (Safari → Chia sẻ → Thêm vào MH chính), rồi quay lại đây bấm Bật. Cần iOS 16.4 trở lên.':'Trình duyệt này chưa hỗ trợ thông báo.';
-  else if(window.Notification&&Notification.permission==='denied')msg='Thông báo đang bị chặn. Vào Cài đặt iPhone → Thông báo → Nghĩa Béo Money để bật lại.';
+  else if(window.Notification&&Notification.permission==='denied')msg='Thông báo đang bị chặn. Vào Cài đặt iPhone → Thông báo → Money để bật lại.';
   else if(on)msg='Đang bật: nhắc lúc '+state.rm.time+' mỗi ngày, bỏ qua nếu hôm đó đã ghi.';
   else msg='Chưa bật thông báo.';
   s.textContent=msg;
@@ -506,7 +506,7 @@ function disableRemind(){
 }
 function icsFile(){
   var t=($('#rm-time').value||'20:00').split(':'),hh=pad(+t[0]),mm=pad(+t[1]);
-  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Nghia Beo Money//VI','BEGIN:VEVENT','UID:nghia-beo-money-daily-'+hh+mm+'@local','DTSTAMP:20260101T000000Z','DTSTART:20260101T'+hh+mm+'00','DURATION:PT10M','RRULE:FREQ=DAILY','SUMMARY:Ghi thu chi hôm nay','DESCRIPTION:Mở Nghĩa Béo Money và ghi các khoản hôm nay.','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Ghi thu chi hôm nay','TRIGGER:PT0S','END:VALARM','END:VEVENT','END:VCALENDAR'];
+  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Nghia Beo Money//VI','BEGIN:VEVENT','UID:nghia-beo-money-daily-'+hh+mm+'@local','DTSTAMP:20260101T000000Z','DTSTART:20260101T'+hh+mm+'00','DURATION:PT10M','RRULE:FREQ=DAILY','SUMMARY:Ghi thu chi hôm nay','DESCRIPTION:Mở Money và ghi các khoản hôm nay.','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Ghi thu chi hôm nay','TRIGGER:PT0S','END:VALARM','END:VEVENT','END:VCALENDAR'];
   downloadText('nhac-thu-chi.ics',L.join('\r\n'),'text/calendar');
 }
 
@@ -529,7 +529,7 @@ function doLogin(){
   fbAuth.signInWithEmailAndPassword(em,pw).then(function(){$('#lg-pass').value=''}).catch(function(e){showLogin(authErr(e))}).then(function(){$('#lg-btn').disabled=false});
 }
 function isOwner(){return !!(me&&me.email&&window.OWNER_EMAIL&&me.email.toLowerCase()===String(window.OWNER_EMAIL).toLowerCase())}
-var BRAND='Nghĩa Béo Money',OWNER_BRAND='Money';
+var BRAND='Money',OWNER_BRAND='Money';
 function applyBrand(){
   var n=isOwner()?OWNER_BRAND:BRAND;
   document.title=n;
