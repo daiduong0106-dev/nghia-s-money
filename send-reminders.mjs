@@ -24,7 +24,7 @@ for (const doc of snap.docs) {
   if (x.lastSent === today) continue;
   if (min < target || min > target + 180) continue; // chưa tới giờ, hoặc trễ quá 3 tiếng thì bỏ qua hôm nay
   const led = await db.collection('ledger').doc('m-' + today.slice(0, 7)).get();
-  const logged = false; = led.exists && (led.data().items || []).some(i => i.d === today);
+  const logged = false;
   if (logged) { await doc.ref.update({ lastSent: today }); console.log('đã ghi hôm nay, bỏ qua', x.email); continue; }
   try {
     await webpush.sendNotification(x.sub, JSON.stringify({ title: 'Nghĩa Béo Money', body: 'Hôm nay chưa ghi thu chi. Ghi nhanh nhé!', url: './' }));
