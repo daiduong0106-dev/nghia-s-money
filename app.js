@@ -529,7 +529,13 @@ function doLogin(){
   fbAuth.signInWithEmailAndPassword(em,pw).then(function(){$('#lg-pass').value=''}).catch(function(e){showLogin(authErr(e))}).then(function(){$('#lg-btn').disabled=false});
 }
 function isOwner(){return !!(me&&me.email&&window.OWNER_EMAIL&&me.email.toLowerCase()===String(window.OWNER_EMAIL).toLowerCase())}
-function startDb(user){me=user;viewOther=false;$('#login').hidden=true;watch()}
+var BRAND='Nghĩa Béo Money',OWNER_BRAND='Money';
+function applyBrand(){
+  var n=isOwner()?OWNER_BRAND:BRAND;
+  document.title=n;
+  Array.prototype.forEach.call(document.querySelectorAll('.brand'),function(el){var m=el.querySelector('.mark');el.textContent='';if(m)el.appendChild(m);el.appendChild(document.createTextNode(n))});
+}
+function startDb(user){me=user;viewOther=false;$('#login').hidden=true;applyBrand();watch()}
 /* Chủ sổ (OWNER_EMAIL) ghi vào 'ledger_owner'; tài khoản còn lại ghi vào 'ledger'. Chủ sổ có thể chuyển sang xem 'ledger' (chỉ xem). */
 function watch(){
   try{unsub&&unsub()}catch(e){}
@@ -564,7 +570,7 @@ function boot(){
   fbAuth.onAuthStateChanged(function(u){
     if(u){startDb(u);return}
     try{unsub&&unsub()}catch(e){}
-    unsub=null;me=null;ro=false;viewOther=false;document.body.classList.remove('ro');state.months={};state.loaded=false;state.error=null;clearTimeout(loadTimer);render();showLogin();
+    unsub=null;me=null;applyBrand();ro=false;viewOther=false;document.body.classList.remove('ro');state.months={};state.loaded=false;state.error=null;clearTimeout(loadTimer);render();showLogin();
   });
 }
 boot();
