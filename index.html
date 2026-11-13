@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nghĩa Béo Money</title>
+<meta name="theme-color" content="#0c7a68">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Béo Money">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: sidebar + content on desktop; top bar, content and bottom tab bar on phone. */
+:root{
+  --bg:#edf2f0; --surface:#ffffff; --surface2:#f3f7f5; --ink:#14211e; --muted:#586966; --line:#d9e2df;
+  --accent:#0c7a68; --on-accent:#ffffff; --danger:#c23b2e;
+  --c-allow:#2e9a6b; --c-save:#2f6fd0; --c-earn:#8a9a12; --c-fixed:#7d63c9; --c-need:#c77f08; --c-want:#d84f6e;
+  --s-income:#1b5e4f; --s-exp:#3f4e57; --s-var:#8e9ba3;
+  --font:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1514; --surface:#152120; --surface2:#1a2a28; --ink:#e7f0ed; --muted:#97aca6; --line:#263836;
+  --accent:#3fc4a9; --on-accent:#06201b; --danger:#ff8a7a;
+  --c-allow:#3aa876; --c-save:#5589e0; --c-earn:#889a1c; --c-fixed:#8f78e0; --c-need:#bf810f; --c-want:#e0607e;
+  --s-income:#7fd3b9; --s-exp:#aab9c1; --s-var:#66767f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1514; --surface:#152120; --surface2:#1a2a28; --ink:#e7f0ed; --muted:#97aca6; --line:#263836;
+  --accent:#3fc4a9; --on-accent:#06201b; --danger:#ff8a7a;
+  --c-allow:#3aa876; --c-save:#5589e0; --c-earn:#889a1c; --c-fixed:#8f78e0; --c-need:#bf810f; --c-want:#e0607e;
+  --s-income:#7fd3b9; --s-exp:#aab9c1; --s-var:#66767f; color-scheme:dark}
+*{box-sizing:border-box}
+body{font-family:var(--font);font-size:15px;line-height:1.45;background:var(--bg);color:var(--ink);
+  padding-block:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.shell{max-width:1120px;margin:0 auto;display:block}
+.side{display:none}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding:12px 0 8px;display:flex;align-items:center;justify-content:space-between;gap:8px 10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px}
+.mark{width:30px;height:30px;border-radius:9px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:15px}
+.tools{display:flex;align-items:center;gap:6px}
+.seg{display:inline-flex;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:2px}
+.seg button{border:0;background:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.linkbtn{background:none;border:0;color:var(--accent);font-size:12px;font-weight:600;padding:6px}
+main{min-width:0;padding-bottom:150px}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;background:var(--surface);border-top:1px solid var(--line);
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.tabbar button,.side nav button{background:none;border:0;display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:500}
+.tabbar button{flex:1;flex-direction:column;gap:2px;font-size:11px;padding:6px 2px;border-radius:10px;min-width:0}
+.tabbar button[aria-current="page"],.side nav button[aria-current="page"]{color:var(--accent);font-weight:600}
+.ico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:26;
+  height:54px;min-width:54px;padding:0 18px;border-radius:27px;border:0;background:var(--accent);color:var(--on-accent);
+  font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+.fab svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+@media(min-width:900px){
+  .shell{display:grid;grid-template-columns:216px minmax(0,1fr);gap:36px;padding-top:24px}
+  .topbar,.tabbar,.fab{display:none}
+  .side{display:flex;flex-direction:column;gap:22px;position:sticky;top:24px;align-self:start}
+  .side nav{display:flex;flex-direction:column;gap:2px}
+  .side nav button{padding:10px 12px;border-radius:10px;font-size:15px}
+  .side nav button:hover{background:var(--surface)}
+  main{padding-bottom:60px}
+}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 16px;font-weight:600}
+.btn.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn.danger{color:var(--danger)}
+.btn.small{padding:6px 12px;font-size:13px}
+.monthbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0 14px}
+.monthbar .mid{text-align:center;min-width:0}
+.monthbar strong{display:block;font-size:18px}
+.monthbar small{color:var(--muted)}
+.ibtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;font-size:18px;flex:none}
+.ibtn:disabled{opacity:.35;cursor:default}
+h1.pt{font-size:22px;margin:6px 0 12px;text-wrap:balance}
+h2.ct{font-size:15px;margin:0 0 12px;font-weight:600}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));margin-top:14px}
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 16px}
+.hero .lbl{color:var(--muted);font-size:13px}
+.hero .big{display:block;font-size:34px;font-weight:600;line-height:1.15;margin:2px 0 4px;overflow-wrap:anywhere}
+.hero .big.neg{color:var(--danger)}
+.hero .sub{color:var(--muted);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0 0;padding:0}
+.stats div{background:var(--surface2);border-radius:12px;padding:10px 12px;min-width:0}
+.stats dt{font-size:12px;color:var(--muted);margin:0}
+.stats dd{margin:2px 0 0;font-size:14px;font-weight:600;overflow-wrap:anywhere}
+.usebar{display:flex;gap:2px;height:12px;margin-top:16px;border-radius:6px;overflow:hidden;background:var(--surface2)}
+.usebar i{display:block;height:100%}
+.usecap{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px;margin-top:6px;flex-wrap:wrap}
+.chart{position:relative;height:250px}
+.donutwrap{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;align-items:center}
+.donutbox{position:relative;height:150px}
+.dleg{display:flex;flex-direction:column;gap:8px;min-width:0}
+.dleg div{display:flex;align-items:center;gap:8px;font-size:13px;min-width:0}
+.dleg b{margin-left:auto;font-weight:600}
+.dleg span.p{color:var(--muted);width:38px;text-align:right}
+.dot{width:10px;height:10px;border-radius:50%;flex:none;display:inline-block}
+.tree{display:flex;flex-direction:column;gap:2px}
+.tr{display:grid;grid-template-columns:minmax(0,1fr) 64px auto;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
+.tr:last-child{border-bottom:0}
+.tr .nm{display:flex;align-items:center;gap:8px;min-width:0}
+.tr .nm span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tr.l1 .nm{padding-left:18px}.tr.l2 .nm{padding-left:36px}
+.tr.top{font-weight:600}
+.tr .bar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.tr .bar i{display:block;height:100%;border-radius:3px}
+.tr .amt{font-size:13px;text-align:right}
+.list{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:11px 2px}
+.row:last-child{border-bottom:0}
+.row .rt{min-width:0}
+.row .rt b{display:block;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .rt small{color:var(--muted);font-size:12px}
+.row .amt{font-size:14px;text-align:right}
+.row.nospend .rt b{color:var(--muted);font-style:italic}
+.amt.in{color:var(--c-allow)}.amt.sv{color:var(--c-save)}
+.dayh{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted);font-weight:600;margin:18px 2px 2px}
+.dayh:first-child{margin-top:4px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.search{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit;margin-bottom:10px}
+.nudge{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--surface);border:1px solid var(--c-need);border-radius:14px;padding:12px 14px;margin-bottom:14px}
+.nudge p{margin:0;font-weight:500;flex:1 1 200px}
+.nudge .acts{display:flex;gap:8px;flex-wrap:wrap}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:8px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface)}
+th{color:var(--muted);font-weight:600;font-size:12px}
+.empty{text-align:center;color:var(--muted);padding:40px 16px}
+.empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
+.start{text-align:center;padding:30px 18px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.start h1{margin:0;font-size:22px;text-wrap:balance}
+.start p{margin:0;color:var(--muted);max-width:38ch}
+.start ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;align-items:center}
+.start li{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);font-size:13px}
+.skel{height:120px;border-radius:16px;background:var(--surface);border:1px solid var(--line);margin-bottom:14px;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.5}}
+.notice{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--muted);margin-bottom:12px}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.overlay{position:fixed;inset:0;background:rgba(8,18,16,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.sheet{background:var(--surface);width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));max-height:94%;overflow:auto}
+@media(min-width:700px){.overlay{align-items:center}.sheet{border-radius:20px;padding-bottom:18px}}
+.sheet-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.sheet-h h2{margin:0;font-size:18px}
+.sheet label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 5px;letter-spacing:.02em;text-transform:uppercase}
+.sheet input{width:100%;border:1px solid var(--line);background:var(--surface2);color:var(--ink);border-radius:10px;padding:11px 12px;font:inherit}
+.sheet .hint{color:var(--muted);font-size:13px;margin:4px 0 0}
+.amtwrap{display:flex;align-items:center;gap:8px}
+.amtwrap input{font-family:var(--mono);font-size:22px;font-weight:600;flex:1;min-width:0}
+.amtwrap .u{color:var(--muted);font-size:16px;min-width:30px}
+.k{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:11px 12px;font-family:var(--mono);font-weight:600}
+.entrycur{margin-top:8px}
+.quick{display:flex;gap:6px;flex-wrap:wrap}
+.quick .chip{font-size:12px;padding:5px 10px}
+.catchips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.catchips button{border:1.5px solid var(--line);background:var(--surface2);border-radius:12px;padding:8px 6px;text-align:center;display:flex;flex-direction:column;gap:1px;align-items:center;min-width:0}
+.catchips button b{font-size:13px;display:flex;align-items:center;gap:6px}
+.catchips button small{color:var(--muted);font-size:11px}
+.catchips button[aria-pressed="true"]{border-color:var(--accent);background:var(--surface)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.err{color:var(--danger);font-size:13px;margin:10px 0 0}
+.sheet-f{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.sheet-f .primary{flex:1}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(140px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:60;max-width:90%}
+@media(min-width:900px){.toast{bottom:32px}}
+@media(prefers-reduced-motion:reduce){.skel{animation:none}}
+@media(max-width:420px){.hero .big{font-size:30px}.donutwrap{grid-template-columns:120px minmax(0,1fr)}.donutbox{height:120px}}
+[hidden]{display:none!important}
+body{margin:0}
+.login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:90;padding:16px}
+.login .box{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px 20px}
+.login h1{margin:10px 0 4px;font-size:22px}
+.login p{margin:0 0 6px;color:var(--muted);font-size:14px}
+.login label,.sheet label.l{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:14px 0 5px;letter-spacing:.02em;text-transform:uppercase}
+.login input,.sheet input[type=time]{width:100%;border:1px solid var(--line);background:var(--surface2);color:var(--ink);border-radius:10px;padding:12px;font:inherit;font-size:16px}
+.login .btn{width:100%;margin-top:18px;padding:13px}
+.rmrow{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.rmrow .btn{width:100%}
+</style></head><body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><span class="mark">$</span>Nghĩa Béo Money</div>
+    <nav id="nav-side" aria-label="Điều hướng"></nav>
+    <div class="tools" id="cur-side"></div>
+    <button class="btn primary" data-act="add">+ Thêm khoản</button>
+  </aside>
+  <div>
+    <header class="topbar"><div class="brand"><span class="mark">$</span>Nghĩa Béo Money</div><div class="tools" id="cur-top"></div></header>
+    <main id="view" aria-live="polite"></main>
+  </div>
+</div>
+<nav class="tabbar" id="nav-bottom" aria-label="Điều hướng"></nav>
+<button class="fab" data-act="add" aria-label="Thêm khoản"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Thêm</span></button>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="sheet-h"><h2 id="sheet-title">Thêm khoản</h2><button class="ibtn" data-act="close" aria-label="Đóng">✕</button></div>
+    <div id="quick" class="quick"></div>
+    <label for="f-amt">Số tiền</label>
+    <div class="amtwrap"><input id="f-amt" inputmode="numeric" autocomplete="off" placeholder="0"><span class="u" id="f-u">₫</span><button type="button" class="k" id="f-zeros" data-act="zeros" aria-label="Thêm ba số không">000</button></div>
+    <div class="seg entrycur" id="f-cur" role="group" aria-label="Đơn vị tiền của khoản này"></div>
+    <label for="f-title">Hoạt động</label>
+    <input id="f-title" list="titles" autocomplete="off" placeholder="vd: ăn trưa, xăng, cafe">
+    <datalist id="titles"></datalist>
+    <label>Danh mục</label>
+    <div id="catchips" class="catchips"></div>
+    <div class="two">
+      <div><label for="f-date">Ngày</label><input type="date" id="f-date"></div>
+      <div><label for="f-note">Ghi chú</label><input id="f-note" autocomplete="off" placeholder="Không bắt buộc"></div>
+    </div>
+    <p class="err" id="f-err" role="alert" hidden></p>
+    <div class="sheet-f"><button class="btn danger" id="btn-del" data-act="del" hidden>Xóa</button><button class="btn primary" data-act="save">Lưu</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="ov2" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fx-title">
+    <div class="sheet-h"><h2 id="fx-title">Đổi tiền</h2><button class="ibtn" data-act="closefx" aria-label="Đóng">✕</button></div>
+    <p class="hint">Ghi số tiền đã chuyển đi và số tiền thực nhận. Tỷ giá thực tế này được dùng để quy đổi các khoản khác khi đổi đơn vị hiển thị, không dùng tỷ giá thị trường.</p>
+    <label for="fx-a1">Tiền chuyển đi</label>
+    <div class="amtwrap"><input id="fx-a1" inputmode="numeric" autocomplete="off" placeholder="0"><span class="u" id="fx-u1"></span></div>
+    <div class="seg entrycur" id="fx-c1" role="group" aria-label="Đơn vị tiền chuyển đi"></div>
+    <label for="fx-a2">Tiền nhận được</label>
+    <div class="amtwrap"><input id="fx-a2" inputmode="decimal" autocomplete="off" placeholder="0"><span class="u" id="fx-u2"></span></div>
+    <div class="seg entrycur" id="fx-c2" role="group" aria-label="Đơn vị tiền nhận được"></div>
+    <p class="hint num" id="fx-rate"></p>
+    <div class="two">
+      <div><label for="fx-date">Ngày</label><input type="date" id="fx-date"></div>
+      <div><label for="fx-note">Ghi chú</label><input id="fx-note" autocomplete="off" placeholder="Không bắt buộc"></div>
+    </div>
+    <p class="hint" id="fx-cur"></p>
+    <p class="err" id="fx-err" role="alert" hidden></p>
+    <div class="sheet-f"><button class="btn danger" id="fx-del" data-act="delfx" hidden>Xóa</button><button class="btn primary" data-act="savefx">Lưu</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="ov3" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="rm-title">
+    <div class="sheet-h"><h2 id="rm-title">Nhắc nhở</h2><button class="ibtn" data-act="closerm" aria-label="Đóng">✕</button></div>
+    <p class="hint" id="rm-status"></p>
+    <label class="l" for="rm-time">Giờ nhắc mỗi ngày</label>
+    <input type="time" id="rm-time" value="20:00">
+    <div class="rmrow">
+      <button class="btn primary" id="rm-on" data-act="rmon">Bật thông báo</button>
+      <button class="btn" id="rm-off" data-act="rmoff" hidden>Tắt nhắc</button>
+      <button class="btn" data-act="rmics">Hoặc tải lịch nhắc cho iPhone (.ics)</button>
+      <button class="btn danger" data-act="logout">Đăng xuất <span class="hint" id="rm-who"></span></button>
+    </div>
+  </div>
+</div>
+<div class="login" id="login" hidden>
+  <div class="box">
+    <span class="mark" style="display:inline-grid;width:38px;height:38px;border-radius:11px;background:var(--accent);color:var(--on-accent);place-items:center;font-family:var(--mono);font-weight:600;font-size:19px">$</span>
+    <h1>Nghĩa Béo Money</h1>
+    <p>Chỉ 2 tài khoản được cấp mới vào được.</p>
+    <label for="lg-email">Email</label>
+    <input id="lg-email" type="email" autocomplete="username" inputmode="email" autocapitalize="off">
+    <label for="lg-pass">Mật khẩu</label>
+    <input id="lg-pass" type="password" autocomplete="current-password">
+    <p class="err" id="lg-err" role="alert" hidden></p>
+    <button class="btn primary" id="lg-btn" data-act="login">Đăng nhập</button>
+  </div>
+</div>
+
+<script src="vendor/chart.umd.js"></script>
+<script src="vendor/firebase-app-compat.js"></script>
+<script src="vendor/firebase-auth-compat.js"></script>
+<script src="vendor/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="app.js"></script>
+</body></html>

@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // CHỈ 2 EMAIL NÀY được đọc/ghi. Đổi thành email thật của 2 người.
+    function allowed() {
+      return request.auth != null
+        && request.auth.token.email in ['EMAIL_CUA_BAN@gmail.com', 'EMAIL_NGUOI_THU_2@gmail.com'];
+    }
+    match /ledger/{doc}      { allow read, write: if allowed(); }
+    match /reminders/{uid}   { allow read, write: if allowed() && request.auth.uid == uid; }
+    match /{document=**}     { allow read, write: if false; }
+  }
+}
